@@ -1,79 +1,56 @@
 class SuitsController < ApplicationController
-    include SuitsHelper
-    
-    #before_action :set_suit, only: [:edit, :update, :show, :destroy]
-    
-    # GET /suits
-    # GET /suits.json
-    def index
-        @q_suits = Suit.ransack(params[:q])
-        @suits = @q_suits.result().paginate(page: params[:page])
+    helper_method :sort_column, :sort_direction
+  
+  def index
+    @suits = Suit.order(sort_column + " " + sort_direction)
+  end
+  
+  def show
+    @suit = Suit.find(params[:id])
+  end
+  
+  def new
+    @suit = Suit.new
+  end
+  
+  def create
+    @suit = Suit.new(params[:product])
+    if @suit.save
+      flash[:notice] = "Successfully created suit."
+      redirect_to @suit
+    else
+      render :action => 'new'
     end
-    
-    
-    # GET /suits/1
-    # GET /suits/1.json
-    def show
-        @suits = Suit.find(params[:id])
+  end
+  
+  def edit
+    @suit = Suit.find(params[:id])
+  end
+  
+  def update
+    @suit = Suit.find(params[:id])
+    if @suit.update_attributes(params[:product])
+      flash[:notice] = "Successfully updated suit."
+      redirect_to @suit
+    else
+      render :action => 'edit'
     end
-    
-    
-    # GET /suits/new
-    def new 
-        @suits = Suit.new
-    end
-    
-    
-    # GET /suits/1/edit
-    def edit
-        @suits = Suit.find(params[:id])
-    end
-    
-    
-    def create
-        @suits = Suit.new(suit_params)
-        if @suits.save
-            flash[:notice] = "Suit was succussfully added to the Closet!"
-            redirect_to suit_path(@suits)
-        else
-            render 'new'
-        end
-    end
-    def update
-        @suits = Suit.find(params[:id])
-        if @suits.update(suit_params)
-            flash[:notice] = "Suit was succussfully updated"
-            redirect_to suit_path(@suits)
-        else
-            render 'edit'
-        end
-    end
-
-    
-    def destroy
-        @suits =Suit.find(params[:id])
-        #renters = Renter.where(suit_id: @suits.id)
-        #renters.destroy.all
-        @suits.destroy
-        flash[:success] = "Suit was succussfully deleted"
-        redirect_to suits_path
-    end
-    
-    private
-      #def set_suit
-         # @suit= Suit.find(params[:id])
-      #end
-      
-      def suit_params
-          params.require(:suit).permit(:appid, :gender, :size, :article, :status)
-      end
-      
-      def can_destroy
-        @suits = Suit.find(params[:id])  
-        renter_is_exist = Renter.where(suit_id: @suits.id).where.not(rentStatus:['Complete','Cancel']).size !=0
-        if @suits.status != "Available" || renter_is_exist
-            flash[:danger] = "This suit is in use. It cannot be deleted!"
-            redirect_to suit_path
-        end
-      end
+  end
+  
+  def destroy
+    @suit = Suit.find(params[:id])
+    @suit.destroy
+    flash[:notice] = "Successfully destroyed suit."
+    redirect_to suits_url
+  end
+  
+  private
+  
+  def sort_column
+    Suit.column_names.include?(params[:sort]) ? params[:sort] : "name"
+  end
+  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
 end

@@ -1,22 +1,28 @@
-<h1>Showing selected Suit</h1>
-<div class= "row">
-    <aside class = "col-md-4">
-        <section>
-            <%= label_tag "App. ID" %>
-            <%= @suits.appid %><br>
-            <%= label_tag "Gender" %>
-            <%= @suits.gender %><br>
-            <%= label_tag "Article" %>
-            <%= @suits.article %><br>
-            <%= label_tag "Size" %>
-            <%= @suits.size %><br>
-            <%= label_tag "Status" %>
-            <%= @suits.status %><br>
-        </section>
-    </aside>
-</div>
+<% title "Suit" %>
 
+<p>
+  <strong>Appid:</strong>
+  <%= @suit.appid %>
+</p>
+<p>
+  <strong>Gender:</strong>
+  <%= @suit.gender %>
+</p>
+<p>
+  <strong>Description:</strong>
+  <%= @suit.description %>
+</p>
+<p>
+  <strong>Size:</strong>
+  <%= @suit.size %>
+</p>
+<p>
+  <strong>Status:</strong>
+  <%= @suit.status %>
+</p>
 
-<%= link_to "Edit",edit_suit_path(@suits) %></td>
-<%= link_to "Delete", suit_path(@suits), method: :delete, data: {confirm: "Are you sure?"} %><br>
-<%= link_to "Back to Closet", suits_path %> <br>
+<p>
+  <%= link_to "Edit", edit_suit_path(@suit) %> |
+  <%= link_to "Destroy", @suit, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "Back to Closet", suits_path %>
+</p>

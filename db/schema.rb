@@ -36,10 +36,10 @@ ActiveRecord::Schema.define(version: 20180331203540) do
     t.index ["user_id"], name: "index_renters_on_user_id"
   end
 
-  create_table "suits", force: :cascade do |t|
+  create_table "suits", :force => true do |t|
     t.string "appid"
     t.string "gender"
-    t.string "article"
+    t.string "description"
     t.string "size"
     t.string "status"
     t.datetime "created_at", null: false
